@@ -3,16 +3,33 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{var __t=localStorage.getItem("studio360.theme");if(__t==="light"||__t==="dark")document.documentElement.setAttribute("data-theme",__t)}catch(e){}</script>
 <title>Learning Studio | Course builder and SCORM exporter</title>
 <style>
 :root{
-  --u-bg:#EBEDF1; --u-panel:#FFFFFF; --u-ink:#1C2330; --u-muted:#566070; --u-line:#D5DAE2; --u-field:#FFFFFF;
-  --u-accent:#7A2E4D; --u-on:#FFFFFF; --u-danger:#B3261E; --u-ok:#17724A; --u-warn:#8A5200;
+  /* 60% neutral */ --u-bg:#F8FAFC; --u-panel:#FFFFFF; --u-field:#FFFFFF; --u-line:#CBD5E1;
+  /* text */ --u-ink:#1E293B; --u-muted:#475569;
+  /* 30% brand */ --u-accent:#2563EB; --u-on:#FFFFFF;
+  /* 10% action */ --u-cta:#F59E0B; --u-on-cta:#1E293B;
+  --u-danger:#B3261E; --u-ok:#047857; --u-warn:#8A5200;
   color-scheme:light;
 }
+:root[data-theme=dark]{
+  --u-bg:#0B1220; --u-panel:#111B2E; --u-field:#0B1220; --u-line:#2A3A55;
+  --u-ink:#E2E8F0; --u-muted:#94A3B8;
+  --u-accent:#60A5FA; --u-on:#0B1220;
+  --u-cta:#F59E0B; --u-on-cta:#1E293B;
+  --u-danger:#FF8F86; --u-ok:#34D399; --u-warn:#FBBF24;
+  color-scheme:dark;
+}
 @media (prefers-color-scheme:dark){
-  :root{--u-bg:#0D1015; --u-panel:#171C24; --u-ink:#EDEFF3; --u-muted:#A5AEBC; --u-line:#2B3340; --u-field:#11151B;
-    --u-accent:#E58FB3; --u-on:#14110F; --u-danger:#FF8F86; --u-ok:#5ED19B; --u-warn:#E8A85C; color-scheme:dark;}
+  :root:not([data-theme=light]){
+    --u-bg:#0B1220; --u-panel:#111B2E; --u-field:#0B1220; --u-line:#2A3A55;
+    --u-ink:#E2E8F0; --u-muted:#94A3B8;
+    --u-accent:#60A5FA; --u-on:#0B1220;
+    --u-danger:#FF8F86; --u-ok:#34D399; --u-warn:#FBBF24;
+    color-scheme:dark;
+  }
 }
 *,*::before,*::after{box-sizing:border-box}
 html,body{height:100%}
@@ -229,12 +246,165 @@ body.dragging-file .stage::after{content:"Drop images to add them to this lesson
   #pv-log{border-left:0;border-top:1px solid var(--u-line)}
   body.dragging-file .stage::after{inset:0}
 }
+
+/* ===================== polish layer ===================== */
+:root{--u-shadow:0 1px 2px rgba(16,24,40,.06),0 4px 14px rgba(16,24,40,.07);--u-shadow-lg:0 14px 36px rgba(16,24,40,.18);--u-r:10px}
+body{-webkit-font-smoothing:antialiased}
+.btn{border-radius:8px;transition:background .15s,border-color .15s,box-shadow .15s,transform .06s,filter .15s}
+.btn:hover{box-shadow:var(--u-shadow)}
+.btn:active{transform:translateY(1px)}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn.big{padding:.65rem 1rem;font-size:1rem}
+.linkbtn{background:none;border:0;padding:0;color:var(--u-accent);font-weight:700;text-decoration:underline}
+
+/* view switching */
+#auth-view,#dash-view{display:none}
+body[data-view=auth] #auth-view{display:grid}
+body[data-view=dash] #dash-view{display:block}
+body:not([data-view=edit]) header.top,body:not([data-view=edit]) .workspace{display:none}
+
+/* brand */
+.brand{display:flex;align-items:center;gap:.5rem}
+.logo{display:inline-block;width:1.55rem;height:1.55rem;border-radius:.5rem;background:linear-gradient(135deg,var(--u-accent),color-mix(in srgb,var(--u-accent) 40%,#F59E0B));position:relative;flex:none}
+.logo::after{content:"";position:absolute;inset:.4rem;border-radius:50%;border:2px solid #fff;opacity:.95}
+
+/* top bar */
+header.top{min-height:3.5rem;padding:.4rem 1rem;box-shadow:0 1px 0 var(--u-line),0 2px 8px rgba(16,24,40,.04);position:relative;z-index:5}
+#course-title{border-radius:8px}
+.actions{align-items:center}
+
+/* account chip */
+.acct{position:relative}
+.avatar-btn{display:flex;align-items:center;gap:.5rem;background:transparent;border:1px solid var(--u-line);border-radius:999px;padding:.2rem .7rem .2rem .25rem;font-weight:600}
+.avatar-btn:hover{border-color:var(--u-accent)}
+.avatar{display:grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--u-accent);color:var(--u-on);font-size:.72rem;font-weight:800;letter-spacing:.02em}
+.avatar-name{max-width:9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu-pop{position:absolute;right:0;top:calc(100% + .45rem);min-width:15rem;background:var(--u-panel);border:1px solid var(--u-line);border-radius:12px;box-shadow:var(--u-shadow-lg);padding:.4rem;z-index:60;display:grid;gap:.1rem}
+.menu-pop[hidden]{display:none}
+.mp-id{padding:.5rem .65rem .6rem;border-bottom:1px solid var(--u-line);margin-bottom:.3rem;display:grid}
+.mp-id span{font-size:.8rem;color:var(--u-muted);overflow:hidden;text-overflow:ellipsis}
+.mp-item{background:none;border:0;text-align:left;padding:.5rem .65rem;border-radius:7px;font-weight:600}
+.mp-item:hover{background:var(--u-bg)}
+
+/* auth */
+#auth-view{flex:1;min-height:0;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);overflow:auto}
+.auth-hero{background:radial-gradient(120% 90% at 0% 0%,#3B82F6 0%,#1D4ED8 45%,#0B1F5C 100%);color:#fff;padding:3rem clamp(1.5rem,5vw,4.5rem);display:flex;flex-direction:column;justify-content:center;gap:1.6rem}
+.auth-hero .brand{font-size:1.25rem;color:#fff}
+.auth-hero .brand span{color:#FCD34D}
+.auth-hero h2{font-size:clamp(1.8rem,3.2vw,2.6rem);line-height:1.12;margin:0;letter-spacing:-.02em;max-width:22ch}
+.auth-hero ul{list-style:none;margin:0;padding:0;display:grid;gap:.7rem;font-size:1.02rem}
+.auth-hero li{display:flex;gap:.65rem;align-items:center}
+.auth-hero li::before{content:"✓";display:grid;place-items:center;width:1.4rem;height:1.4rem;border-radius:50%;background:rgba(255,255,255,.18);font-size:.8rem;font-weight:800}
+.auth-side{display:grid;place-items:center;padding:2rem 1.2rem;background:var(--u-bg)}
+.auth-card{width:100%;max-width:25rem;background:var(--u-panel);border:1px solid var(--u-line);border-radius:16px;padding:2rem;box-shadow:var(--u-shadow-lg);display:grid;gap:.9rem}
+.auth-card h1{margin:0;font-size:1.5rem;letter-spacing:-.01em}
+.au-sub{margin:-.4rem 0 .2rem;color:var(--u-muted)}
+.au-f{display:grid;gap:.3rem}
+.au-f label{font-weight:700;font-size:.85rem}
+.auth-card input[type=text],.auth-card input[type=email],.auth-card input[type=password]{width:100%;background:var(--u-field);border:1px solid var(--u-line);border-radius:8px;padding:.6rem .75rem;font-size:1rem}
+.auth-card input:focus{border-color:var(--u-accent);outline:3px solid color-mix(in srgb,var(--u-accent) 30%,transparent);outline-offset:0}
+.au-show{display:flex;gap:.45rem;align-items:center;font-size:.85rem;color:var(--u-muted)}
+.auth-err{margin:0;color:var(--u-danger);font-weight:600;min-height:1.2em}
+.au-switch{margin:0;text-align:center;color:var(--u-muted)}
+.au-note{margin:0;font-size:.78rem;color:var(--u-muted);border-top:1px solid var(--u-line);padding-top:.8rem}
+
+/* dashboard */
+#dash-view{flex:1;min-height:0;overflow:auto}
+.dash-top{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;padding:.6rem 1.2rem;background:var(--u-panel);border-bottom:1px solid var(--u-line)}
+.dash-top .brand{font-weight:800;font-size:1.05rem}
+.dash-top .brand span{color:var(--u-accent)}
+.dash-search{flex:1 1 14rem;max-width:26rem;margin-left:auto;background:var(--u-field);border:1px solid var(--u-line);border-radius:999px;padding:.45rem .9rem}
+.dash-body{max-width:74rem;margin:0 auto;padding:2rem 1.2rem 4rem}
+.dash-body h1{font-size:1.6rem;margin:0 0 .25rem;letter-spacing:-.01em}
+.dash-body>p{margin:0 0 1.5rem;color:var(--u-muted)}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(15.5rem,1fr));gap:1.2rem}
+.proj{position:relative;background:var(--u-panel);border:1px solid var(--u-line);border-radius:14px;overflow:hidden;box-shadow:var(--u-shadow);transition:transform .16s,box-shadow .16s,border-color .16s}
+.proj:hover,.proj:focus-within{transform:translateY(-3px);box-shadow:var(--u-shadow-lg);border-color:var(--u-accent)}
+.proj-open{display:block;width:100%;background:none;border:0;padding:0;text-align:left}
+.proj-thumb{height:8.6rem;background:var(--b);position:relative;padding:1.1rem;display:grid;align-content:start;gap:.5rem;border-bottom:1px solid var(--u-line)}
+.proj-thumb i{display:block;border-radius:4px;background:var(--t);opacity:.17;height:.5rem}
+.proj-thumb .pt-h{width:52%;height:.95rem;background:var(--a);opacity:1}
+.proj-thumb .pt-l{width:88%}.proj-thumb .pt-l.s{width:64%}
+.proj-thumb .pt-c{position:absolute;right:1rem;bottom:.9rem;width:3.4rem;height:2.2rem;background:var(--p);opacity:1;border:2px solid var(--a);border-radius:6px}
+.proj-meta{padding:.8rem 1rem .5rem;display:grid;gap:.1rem}
+.proj-meta b{font-size:1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.proj-meta span{font-size:.8rem;color:var(--u-muted)}
+.proj-actions{display:flex;gap:.2rem;padding:0 .6rem .6rem}
+.proj-actions .tbtn{font-size:.8rem;color:var(--u-muted)}
+.proj-actions .tbtn.del{color:var(--u-danger)}
+.proj.new{display:grid;place-items:center;min-height:15rem;border:2px dashed var(--u-line);background:transparent;box-shadow:none;color:var(--u-muted);font-weight:700;cursor:pointer;width:100%;font-size:1rem}
+.proj.new:hover{border-color:var(--u-accent);color:var(--u-accent)}
+.proj.new big{display:block;font-size:2rem;line-height:1}
+.dash-empty{border:2px dashed var(--u-line);border-radius:16px;padding:2rem;text-align:center;background:var(--u-panel)}
+.dash-empty h2{margin:0 0 .3rem}.dash-empty p{margin:0 0 1.2rem;color:var(--u-muted)}
+.dash-empty .tpls{text-align:left;max-width:48rem;margin:0 auto}
+
+/* editor chrome */
+.outline h2,.panel h3,.add-zone h2{letter-spacing:.08em}
+.ol-item{transition:background .12s}
+.ol-item:hover{background:var(--u-bg)}
+.ol-item.active{background:color-mix(in srgb,var(--u-accent) 10%,var(--u-panel));border-color:color-mix(in srgb,var(--u-accent) 55%,transparent)}
+.tab{transition:color .12s,border-color .12s}
+.tab:hover{color:var(--u-ink)}
+.stage{background:var(--u-bg)}
+#canvas{box-shadow:0 1px 2px rgba(16,24,40,.12),0 18px 50px rgba(16,24,40,.1);border:1px solid color-mix(in srgb,var(--fg) 8%,transparent)}
+.blk{transition:border-color .12s,box-shadow .12s}
+.blk:hover,.blk:focus-within{box-shadow:0 2px 14px rgba(16,24,40,.08)}
+.blk-bar{box-shadow:var(--u-shadow);border-radius:9px}
+.gap .plus{box-shadow:0 2px 8px rgba(0,0,0,.25);transition:transform .12s;width:1.8rem;height:1.8rem;font-size:1.1rem}
+.gap .plus:hover{transform:translate(-50%,-50%) scale(1.12)}
+.tile{border-radius:12px;transition:transform .12s,box-shadow .12s,border-color .12s}
+.tile:hover{transform:translateY(-2px);box-shadow:var(--u-shadow);border-color:var(--u-accent)}
+.tile:active{cursor:grabbing}
+.tile svg{padding:.3rem;box-sizing:content-box;border-radius:8px;background:color-mix(in srgb,var(--u-accent) 12%,transparent)}
+.slot{transition:background .15s,border-color .15s}
+.thumb{transition:box-shadow .12s}.thumb:hover{box-shadow:var(--u-shadow)}
+dialog{box-shadow:var(--u-shadow-lg);border-radius:16px}
+dialog[open]{animation:dlg-in .18s ease-out}
+@keyframes dlg-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
+.tpl{border-radius:12px;transition:transform .12s,box-shadow .12s,border-color .12s}
+.tpl:hover{transform:translateY(-2px);box-shadow:var(--u-shadow)}
+#toast{box-shadow:var(--u-shadow-lg);border-radius:10px}
+
+/* add content: drag and drop card */
+.dropcard{display:grid;justify-items:center;gap:.2rem;padding:1.5rem 1rem;margin-bottom:1rem;border:2px dashed var(--line);border-radius:var(--radius);color:var(--muted);cursor:pointer;text-align:center;background:color-mix(in srgb,var(--fg) 3%,transparent);transition:border-color .15s,background .15s,transform .15s}
+.dropcard svg{color:var(--accent);margin-bottom:.2rem}
+.dropcard b{color:var(--fg);font-size:1.02rem}
+.dropcard span{font-size:.85rem;max-width:34rem}
+.dropcard:hover,.dropcard:focus-visible,.dropcard.drop{border-color:var(--accent);color:var(--fg)}
+.dropcard.drop{background:color-mix(in srgb,var(--accent) 12%,transparent);transform:scale(1.012)}
+.add-zone .sub{font-size:.8rem;font-weight:700;color:var(--muted);margin:0 0 .5rem}
+
+/* page-wide drop hint (replaces the old fixed overlay) */
+.workspace{position:relative}
+body.dragging-file .stage::after{content:none}
+body.dragging-file .workspace::after{content:"Drop images to add them to this lesson";position:absolute;inset:.5rem 21.5rem .5rem 15.5rem;display:grid;place-items:start center;padding-top:1rem;font-size:1.1rem;font-weight:800;color:var(--u-accent);background:color-mix(in srgb,var(--u-accent) 5%,transparent);border:3px dashed var(--u-accent);border-radius:14px;pointer-events:none;z-index:20}
+@media (max-width:68rem){
+  body.dragging-file .workspace::after{position:fixed;inset:.5rem}
+  #auth-view{grid-template-columns:1fr}.auth-hero{display:none}
+}
+@media (prefers-reduced-motion:reduce){.tile:hover,.proj:hover,.tpl:hover,.dropcard.drop{transform:none}dialog[open]{animation:none}}
+/* action accent (10%): amber call to action */
+.btn.cta,#btn-export{background:var(--u-cta);border-color:var(--u-cta);color:var(--u-on-cta)}
+.btn.cta:hover,#btn-export:hover{border-color:var(--u-cta);filter:brightness(1.06)}
+.exp button.primary{background:var(--u-cta);border-color:var(--u-cta);color:var(--u-on-cta)}
+.theme-btn{display:grid;place-items:center;width:2.15rem;height:2.15rem;border-radius:50%;background:transparent;border:1px solid var(--u-line);color:var(--u-ink);padding:0;transition:border-color .15s,background .15s}
+.theme-btn:hover{border-color:var(--u-accent);background:var(--u-bg)}
+.auth-side{position:relative}
+.auth-theme{position:absolute;top:1rem;right:1rem}
+.actions .theme-btn{margin-left:.2rem}
+.top .actions{gap:.4rem}
+#acct-slot{display:flex;align-items:center;gap:.4rem}
 </style>
 </head>
-<body>
+<body data-view="loading">
+
+<section id="auth-view" aria-label="Sign in"></section>
+<section id="dash-view" aria-label="My projects"></section>
 
 <header class="top">
-  <div class="brand">Studio <span>360</span></div>
+  <button class="btn small" id="btn-home" type="button" title="Back to My projects">← Projects</button>
+  <div class="brand"><i class="logo"></i>Learning <span>Studio</span></div>
   <div class="undo">
     <button class="btn small" id="btn-undo" type="button" aria-label="Undo" title="Undo (Ctrl+Z)">Undo</button>
     <button class="btn small" id="btn-redo" type="button" aria-label="Redo" title="Redo (Ctrl+Shift+Z)">Redo</button>
@@ -242,12 +412,12 @@ body.dragging-file .stage::after{content:"Drop images to add them to this lesson
   <input id="course-title" type="text" aria-label="Course title" placeholder="Course title">
   <span id="status" role="status" aria-live="polite"></span>
   <div class="actions">
-    <button class="btn" id="btn-new" type="button">New course</button>
-    <button class="btn" id="btn-open" type="button">Open project</button>
+    <button class="btn" id="btn-new" type="button">New project</button>
+    <button class="btn" id="btn-open" type="button" title="Import a project file (.json) into your account">Import</button>
     <button class="btn" id="btn-preview" type="button">Preview</button>
     <button class="btn primary" id="btn-export" type="button">Export</button>
+    <div id="acct-slot"></div>
   </div>
-  <input id="file-open" type="file" accept=".json,application/json" hidden>
 </header>
 
 <div class="workspace">
@@ -279,9 +449,9 @@ body.dragging-file .stage::after{content:"Drop images to add them to this lesson
 </dialog>
 
 <dialog id="new-dlg" aria-labelledby="nw-h">
-  <div class="dlg-head"><h2 id="nw-h">Start a new course</h2><button class="btn small" type="button" data-close>Close</button></div>
+  <div class="dlg-head"><h2 id="nw-h">Start a new project</h2><button class="btn small" type="button" data-close>Close</button></div>
   <div class="dlg-body">
-    <p class="hint" style="margin-top:0">This replaces the course you are editing. Export a project file first if you want to keep it.</p>
+    <p class="hint" style="margin-top:0">This creates a new project in your account. Your other projects stay saved in My projects.</p>
     <div class="tpls" id="tpl-list"></div>
   </div>
 </dialog>
@@ -315,6 +485,7 @@ body.dragging-file .stage::after{content:"Drop images to add them to this lesson
 </dialog>
 
 <div id="toast" role="status" aria-live="polite"></div>
+<input id="file-open" type="file" accept=".json,application/json" hidden>
 
 <script id="core">
 'use strict';
@@ -341,6 +512,7 @@ const FONTS = {
 };
 const RADII = { sharp: '2px', soft: '8px', round: '18px' };
 const PRESETS = [
+  { id: 'cobalt',   name: 'Cobalt',    colors: { accent: '#2563EB', bg: '#FFFFFF', panel: '#F1F5F9', text: '#1E293B' } },
   { id: 'plum',     name: 'Plum',      colors: { accent: '#7A2E4D', bg: '#FFFFFF', panel: '#F6F3F5', text: '#1F1A1D' } },
   { id: 'ocean',    name: 'Ocean',     colors: { accent: '#0B6E99', bg: '#FFFFFF', panel: '#EDF4F8', text: '#10232E' } },
   { id: 'forest',   name: 'Forest',    colors: { accent: '#2F6B4F', bg: '#FFFFFF', panel: '#EEF3EF', text: '#18271F' } },
@@ -458,7 +630,7 @@ const TEMPLATES = [
 ];
 function newCourse(kind) {
   const c = { id: uid() + uid(), title: 'Untitled course', author: '', passing: 80, sequential: false, font: 'sans', radius: 'soft',
-    palette: Object.assign({ preset: 'plum' }, PRESETS[0].colors), media: {}, lessons: [] };
+    palette: Object.assign({ preset: 'cobalt' }, PRESETS[0].colors), media: {}, lessons: [] };
   if (kind === 'visual') {
     c.title = 'Visual learning starter';
     c.lessons = [
@@ -491,7 +663,7 @@ function newCourse(kind) {
     ];
   } else if (kind === 'deescalation') {
     c.title = 'De-escalation Scenario: Managing Conflict';
-    c.palette = Object.assign({ preset: 'ocean' }, PRESETS[1].colors);
+    c.palette = Object.assign({ preset: 'ocean' }, PRESETS.find(x => x.id === 'ocean').colors);
     c.lessons = [
       newLesson('The situation', [
         makeBlock('heading', { text: 'A customer is upset' }),
@@ -521,7 +693,7 @@ function normalizeCourse(src) {
   const sp = src.palette;
   if (sp && isHex(sp.accent) && isHex(sp.bg) && isHex(sp.panel) && isHex(sp.text)) c.palette = { preset: sp.preset || 'custom', accent: sp.accent, bg: sp.bg, panel: sp.panel, text: sp.text };
   else { // projects from the first version had accent + theme only
-    const p = (src.theme === 'dark' ? PRESETS.find(x => x.id === 'midnight') : PRESETS[0]).colors;
+    const p = (src.theme === 'dark' ? PRESETS.find(x => x.id === 'midnight') : PRESETS.find(x => x.id === 'plum')).colors;
     c.palette = Object.assign({ preset: 'custom' }, p, isHex(src.accent) ? { accent: src.accent } : {});
   }
   if (src.media && typeof src.media === 'object') Object.keys(src.media).forEach(k => { const m = src.media[k]; if (m && /^data:image\//.test(m.src)) c.media[k] = { name: String(m.name || 'image'), src: m.src }; });
@@ -697,6 +869,20 @@ function buildPackage(course, version) {
 }
 function buildStandalone(course) { return buildIndexHTML(prepareCourse(course, false).data, 'web'); }
 
+/* flip cards: a real 3D flip, shared by the editor preview and exported courses */
+const FLIP_CSS = [
+'.flip{display:block;position:relative;width:100%;min-height:11rem;cursor:pointer;perspective:1200px;text-align:center;border-radius:var(--radius);-webkit-tap-highlight-color:transparent}',
+'.flip .inner{display:grid;position:relative;width:100%;min-height:inherit;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.45,.05,.2,1)}',
+'.flip[aria-pressed=true] .inner{transform:rotateY(180deg)}',
+'.flip .face{grid-area:1/1;position:relative;display:grid;gap:.6rem;justify-items:center;align-content:center;padding:1.2rem;border:2px solid var(--line);border-radius:var(--radius);background:var(--panel);color:var(--fg);backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 1px 3px rgba(0,0,0,.12),0 8px 20px rgba(0,0,0,.06);transition:box-shadow .25s}',
+'.flip .face::after{content:"↻";position:absolute;right:.65rem;bottom:.35rem;font-size:1rem;opacity:.45}',
+'.flip .back{transform:rotateY(180deg);background:var(--accent);color:var(--on-accent);border-color:var(--accent)}',
+'.flip:hover .face{box-shadow:0 2px 6px rgba(0,0,0,.16),0 14px 30px rgba(0,0,0,.1)}',
+'.flip img{max-width:100%;max-height:7rem;border-radius:calc(var(--radius) - 2px)}',
+'.pre{white-space:pre-wrap}',
+'@media (prefers-reduced-motion:reduce){.flip .inner{transform:none!important;transition:none!important}.flip .face{backface-visibility:visible;-webkit-backface-visibility:visible;transition:opacity .2s!important}.flip .back{transform:none;opacity:0}.flip[aria-pressed=true] .back{opacity:1}.flip[aria-pressed=true] .front{opacity:0}}'
+].join('\n');
+
 /* ---------- styles for exported courses (colors come from themeDecls) ---------- */
 const RUNTIME_CSS = [
 '*,*::before,*::after{box-sizing:border-box}',
@@ -739,10 +925,7 @@ const RUNTIME_CSS = [
 'details{border:1px solid var(--line);border-radius:var(--radius);margin:.6rem 0;background:var(--panel)}',
 'details summary{cursor:pointer;padding:.7rem 1rem;font-weight:700}details .rich{padding:0 1rem}',
 '.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:1rem;margin:1.5rem 0}',
-'.flip{min-height:11rem;border:2px solid var(--line);border-radius:var(--radius);background:var(--panel);cursor:pointer;padding:1rem;text-align:center;display:grid;place-items:center}',
-'.flip .face{display:grid;gap:.6rem;justify-items:center}.flip img{max-width:100%;max-height:7rem;border-radius:calc(var(--radius) - 2px)}',
-'.flip .back{display:none}.flip[aria-pressed=true]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}',
-'.flip[aria-pressed=true] .front{display:none}.flip[aria-pressed=true] .back{display:grid}',
+FLIP_CSS,
 '.steps{list-style:none;margin:1.5rem 0;padding:0;display:grid;gap:0}',
 '.steps li{display:grid;grid-template-columns:2.4rem 1fr;gap:1rem;padding-bottom:1.3rem;position:relative}',
 '.steps li:not(:last-child)::before{content:"";position:absolute;left:1.15rem;top:2.4rem;bottom:.1rem;width:2px;background:var(--line)}',
@@ -765,7 +948,9 @@ const RUNTIME_CSS = [
 '.lb{position:fixed;inset:0;background:rgba(0,0,0,.85);display:grid;place-items:center;padding:1.5rem;z-index:100;cursor:zoom-out}',
 '.lb img{max-width:100%;max-height:calc(100vh - 6rem);border-radius:var(--radius)}.lb .btn{position:fixed;top:1rem;right:1rem}',
 '@media (max-width:48rem){.app{display:block}.nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}.nav ol{display:none}.nav.open ol{display:grid}.menu{display:inline-block}main{padding:1.25rem 1rem 2.5rem}.split{grid-template-columns:1fr}.split.right figure{order:0}}',
-'@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}'
+'.page{animation:pgin .35s ease-out}@keyframes pgin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}',
+'.btn,.nav li button,.opt,details{transition:background .15s,border-color .15s,box-shadow .15s}.btn:hover:not([disabled]){filter:brightness(1.08)}',
+'@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}'
 ].join('\n');
 
 /* ---------- the course player; copied into every export, so it must stay self-contained ---------- */
@@ -985,11 +1170,18 @@ function courseRuntime(DATA, MODE) {
       case 'flipcards':
         wrap = el('div', { class: 'cards' });
         (b.cards || []).forEach(function (c) {
-          var btn = el('button', { class: 'flip', type: 'button', 'aria-pressed': 'false' }, [
-            el('span', { class: 'face front' }, [c.img ? el('img', { src: c.img, alt: '' }) : null, el('span', { class: 'pre', text: c.front }), el('span', { class: 'vh', text: ' (front of card, press to flip)' })]),
-            el('span', { class: 'face back' }, [el('span', { class: 'pre', text: c.back }), el('span', { class: 'vh', text: ' (back of card, press to flip back)' })])]);
-          btn.addEventListener('click', function () { btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); });
-          wrap.appendChild(btn);
+          var front = el('span', { class: 'face front', 'aria-hidden': 'false' }, [c.img ? el('img', { src: c.img, alt: '' }) : null, el('span', { class: 'pre', text: c.front }), el('span', { class: 'vh', text: ' (front of card, press to flip)' })]);
+          var back = el('span', { class: 'face back', 'aria-hidden': 'true' }, [el('span', { class: 'pre', text: c.back }), el('span', { class: 'vh', text: ' (back of card, press to flip back)' })]);
+          var card = el('div', { class: 'flip', role: 'button', tabindex: '0', 'aria-pressed': 'false' }, [el('span', { class: 'inner' }, [front, back])]);
+          function flip() {
+            var on = card.getAttribute('aria-pressed') !== 'true';
+            card.setAttribute('aria-pressed', on ? 'true' : 'false');
+            front.setAttribute('aria-hidden', on ? 'true' : 'false');
+            back.setAttribute('aria-hidden', on ? 'false' : 'true');
+          }
+          card.addEventListener('click', flip);
+          card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+          wrap.appendChild(card);
         });
         return wrap;
       case 'steps':
@@ -1111,6 +1303,7 @@ function h(tag, props, ...kids) {
   kids.flat(Infinity).forEach(c => { if (c != null && c !== false) n.append(c); });
   return n;
 }
+document.head.append(h('style', { text: FLIP_CSS + '\n.fcard .flip,.fcard .flip .inner{min-height:6.5rem}.fcard .flip{margin-bottom:.6rem}.fcard .face{padding:.7rem;font-size:.9rem}' }));
 function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), 2200); }
 
 /* ---------- storage: IndexedDB (roomy) with localStorage fallback ---------- */
@@ -1122,21 +1315,84 @@ const Store = {
     try { const t = this.db.transaction('kv').objectStore('kv').get(k); t.onsuccess = () => res(t.result == null ? null : t.result); t.onerror = () => res(null); } catch (e) { res(null); } }); },
   set(k, v) { return new Promise((res, rej) => {
     if (!this.db) { try { localStorage.setItem('studio360.' + k, v); res(); } catch (e) { rej(e); } return; }
-    try { const tx = this.db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(v, k); tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); } catch (e) { rej(e); } }); }
+    try { const tx = this.db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(v, k); tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); } catch (e) { rej(e); } }); },
+  del(k) { return new Promise(res => {
+    if (!this.db) { try { localStorage.removeItem('studio360.' + k); } catch (e) { /* ignore */ } res(); return; }
+    try { const tx = this.db.transaction('kv', 'readwrite'); tx.objectStore('kv').delete(k); tx.oncomplete = () => res(); tx.onerror = () => res(); } catch (e) { res(); } }); }
 };
+
+/* ---------- creator accounts + per-account projects ---------- */
+const b64 = u8 => btoa(String.fromCharCode.apply(null, u8));
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const hasSubtle = !!(window.crypto && crypto.subtle);
+async function pwHash(pw, saltB64, scheme) {
+  if (scheme === 'p1') {
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: unb64(saltB64), iterations: 150000, hash: 'SHA-256' }, key, 256);
+    return b64(new Uint8Array(bits));
+  }
+  let x = 5381; const s = saltB64 + '|' + pw; // fallback for browsers without WebCrypto
+  for (let r = 0; r < 3000; r++) for (let i = 0; i < s.length; i++) x = (((x << 5) + x) ^ s.charCodeAt(i)) >>> 0;
+  return x.toString(16);
+}
+const Auth = {
+  user: null, accounts: {}, isNew: false,
+  async load() { const s = await Store.get('accounts'); try { this.accounts = s ? JSON.parse(s) : {}; } catch (e) { this.accounts = {}; } },
+  save() { return Store.set('accounts', JSON.stringify(this.accounts)); },
+  async resume() { const id = await Store.get('session'); const u = id && Object.values(this.accounts).find(a => a.id === id); if (u) { this.user = u; return true; } return false; },
+  async signUp(name, email, pw) {
+    name = String(name || '').trim(); email = String(email || '').trim().toLowerCase();
+    if (!name) throw new Error('Please enter your name.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Enter a valid email address.');
+    if (String(pw).length < 8) throw new Error('Use at least 8 characters for your password.');
+    if (this.accounts[email]) throw new Error('An account with that email already exists. Try signing in.');
+    const salt = b64(crypto.getRandomValues(new Uint8Array(16))), scheme = hasSubtle ? 'p1' : 'f1';
+    const u = { id: uid() + uid(), name, email, salt, scheme, hash: await pwHash(pw, salt, scheme), created: Date.now() };
+    this.isNew = !Object.keys(this.accounts).length;
+    this.accounts[email] = u; await this.save(); this.user = u; await Store.set('session', u.id);
+  },
+  async signIn(email, pw) {
+    const u = this.accounts[String(email || '').trim().toLowerCase()];
+    if (!u || (await pwHash(String(pw), u.salt, u.scheme)) !== u.hash) throw new Error('That email and password do not match.');
+    this.isNew = false; this.user = u; await Store.set('session', u.id);
+  },
+  async signOut() { this.user = null; await Store.set('session', ''); }
+};
+const Projects = {
+  index: [],
+  key(id) { return 'proj:' + Auth.user.id + ':' + id; },
+  async load() { const s = await Store.get('idx:' + Auth.user.id); try { this.index = s ? JSON.parse(s) : []; } catch (e) { this.index = []; } },
+  entry(c) {
+    const p = c.palette; let n = 0; c.lessons.forEach(l => { n += l.blocks.length; });
+    return { id: c.id, title: c.title || 'Untitled course', updated: Date.now(), lessons: c.lessons.length, blocks: n, pal: { accent: p.accent, bg: p.bg, text: p.text, panel: p.panel } };
+  },
+  async save(c) {
+    await Store.set(this.key(c.id), JSON.stringify(c));
+    const e = this.entry(c), i = this.index.findIndex(x => x.id === c.id);
+    if (i < 0) this.index.unshift(e); else this.index[i] = e;
+    await Store.set('idx:' + Auth.user.id, JSON.stringify(this.index));
+  },
+  async open(id) { const s = await Store.get(this.key(id)); if (!s) throw new Error('That project could not be found.'); return normalizeCourse(JSON.parse(s)); },
+  async remove(id) { await Store.del(this.key(id)); this.index = this.index.filter(x => x.id !== id); await Store.set('idx:' + Auth.user.id, JSON.stringify(this.index)); }
+};
+
 
 let course = null, cur = 0, activeIdx = -1, tab = 'design';
 
 /* ---------- saving + undo history ---------- */
-let saveT, histT; const hist = { stack: [], i: -1 };
+let saveT, histT, dirty = false; const hist = { stack: [], i: -1 };
 const snapshot = () => JSON.stringify(course, (k, v) => k === 'media' ? undefined : v);
 function setStatus(t, err) { const s = $('#status'); s.textContent = t; s.className = err ? 'err' : ''; }
-async function persist() { try { await Store.set('project', JSON.stringify(course)); setStatus('All changes saved'); } catch (e) { setStatus('Could not save in this browser. Export a project file.', true); } }
+async function persist() {
+  if (!course || !Auth.user) return;
+  dirty = false;
+  try { await Projects.save(course); setStatus('Saved to your account'); } catch (e) { dirty = true; setStatus('Could not save in this browser. Export a project file.', true); }
+}
 function pushHist() {
   const s = snapshot(); if (s === hist.stack[hist.i]) return;
   hist.stack.length = hist.i + 1; hist.stack.push(s); if (hist.stack.length > 80) hist.stack.shift(); hist.i = hist.stack.length - 1; updateUndo();
 }
-function save() { setStatus('Saving…'); clearTimeout(saveT); saveT = setTimeout(persist, 500); clearTimeout(histT); histT = setTimeout(pushHist, 700); }
+function save() { dirty = true; document.dispatchEvent(new Event('s360-save')); setStatus('Saving…'); clearTimeout(saveT); saveT = setTimeout(persist, 500); clearTimeout(histT); histT = setTimeout(pushHist, 700); }
 function updateUndo() { $('#btn-undo').disabled = hist.i <= 0; $('#btn-redo').disabled = hist.i >= hist.stack.length - 1; }
 function restore(i) {
   const media = course.media; course = Object.assign(JSON.parse(hist.stack[i]), { media }); hist.i = i; updateUndo();
@@ -1148,7 +1404,8 @@ const checkpoint = () => { clearTimeout(histT); if (course) pushHist(); };
 ['click', 'drop', 'change', 'dragstart'].forEach(t => document.addEventListener(t, checkpoint, true));
 $('#btn-undo').addEventListener('click', undo); $('#btn-redo').addEventListener('click', redo);
 document.addEventListener('keydown', e => {
-  if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+  if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 's') { e.preventDefault(); if (course) flush().then(() => toast('Saved to your account')); return; }
+  if (!course || !(e.ctrlKey || e.metaKey) || e.altKey) return;
   const t = e.target; if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
   const k = e.key.toLowerCase();
   if (k === 'z' && !e.shiftKey) { e.preventDefault(); undo(); } else if ((k === 'z' && e.shiftKey) || k === 'y') { e.preventDefault(); redo(); }
@@ -1287,6 +1544,23 @@ function dropZone(label, onFiles, multiple = true) {
   return z;
 }
 
+/* live flip preview inside each flip-card editor */
+function flipPreview(c) {
+  const front = h('span', { class: 'face front', 'aria-hidden': 'false' }), back = h('span', { class: 'face back', 'aria-hidden': 'true' });
+  const sync = () => {
+    const src = mSrc(c.img);
+    front.replaceChildren(...(src ? [h('img', { src, alt: '' })] : []), h('span', { class: 'pre', text: c.front || 'Front' }));
+    back.replaceChildren(h('span', { class: 'pre', text: c.back || 'Back' }));
+  };
+  const card = h('div', { class: 'flip', role: 'button', tabindex: '0', 'aria-pressed': 'false', 'aria-label': 'Preview this card. Press to flip it.' }, h('span', { class: 'inner' }, front, back));
+  const flip = () => { const on = card.getAttribute('aria-pressed') !== 'true'; card.setAttribute('aria-pressed', String(on)); front.setAttribute('aria-hidden', String(on)); back.setAttribute('aria-hidden', String(!on)); };
+  card.addEventListener('click', flip);
+  card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+  const on = () => { if (!card.isConnected) document.removeEventListener('s360-save', on); else sync(); };
+  document.addEventListener('s360-save', on);
+  sync(); return card;
+}
+
 /* ---------- block editors ---------- */
 const editors = {
   heading: b => h('div', null, inp(b, 'text', { cls: 'h-in', ph: 'Heading' })),
@@ -1323,7 +1597,7 @@ const editors = {
     const grid = h('div', { class: 'cards-grid' });
     const draw = () => {
       grid.replaceChildren();
-      b.cards.forEach((c, i) => grid.append(h('div', { class: 'fcard' }, cfield('Front', ta(c, 'front', 2)), h('div', { class: 'cf' }, h('span', { text: 'Front picture (optional)' }), imageSlot(c, 'img', { label: 'Add a picture' })), cfield('Back', ta(c, 'back', 2)),
+      b.cards.forEach((c, i) => grid.append(h('div', { class: 'fcard' }, flipPreview(c), cfield('Front', ta(c, 'front', 2)), h('div', { class: 'cf' }, h('span', { text: 'Front picture (optional)' }), imageSlot(c, 'img', { label: 'Add a picture' })), cfield('Back', ta(c, 'back', 2)),
         h('div', { class: 'row' }, tbtn('◀', () => { if (moveIn(b.cards, i, -1)) draw(); }, { label: 'Move earlier', disabled: i === 0 }), tbtn('▶', () => { if (moveIn(b.cards, i, 1)) draw(); }, { label: 'Move later', disabled: i === b.cards.length - 1 }), tbtn('Remove', () => { b.cards.splice(i, 1); save(); draw(); }, { cls: 'del', disabled: b.cards.length <= 1 })))));
     };
     draw(); return h('div', null, grid, h('div', { class: 'row' }, tbtn('+ Add card', () => { b.cards.push({ front: '', back: '', img: '' }); save(); draw(); })));
@@ -1410,6 +1684,19 @@ function blockCard(b, i, lesson) {
   card.addEventListener('focusin', () => { activeIdx = i; });
   return card;
 }
+function addDropCard(l) {
+  const input = h('input', { type: 'file', accept: 'image/*', multiple: true, hidden: true });
+  const z = h('div', { class: 'dropcard', tabindex: '0', role: 'button', 'aria-label': 'Add images. Drag and drop files here, or press Enter to browse.' });
+  z.innerHTML = icon('image', 30);
+  z.append(h('b', { text: 'Drag and drop images here' }), h('span', { text: 'or click to browse, or paste with Ctrl+V. One image becomes an Image block, several become a Gallery.' }), input);
+  z.addEventListener('click', e => { if (e.target !== input) input.click(); });
+  z.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target === z) { e.preventDefault(); input.click(); } });
+  input.addEventListener('change', () => { const f = imageFiles(input.files); input.value = ''; if (f.length) dropAt(l.blocks.length, { files: f, getData: () => '' }); });
+  z.addEventListener('dragover', e => { if (!isOurDrag(e)) return; e.preventDefault(); e.stopPropagation(); clearGaps(); z.classList.add('drop'); });
+  z.addEventListener('dragleave', () => z.classList.remove('drop'));
+  z.addEventListener('drop', e => { if (!isOurDrag(e)) return; e.preventDefault(); e.stopPropagation(); z.classList.remove('drop'); document.body.classList.remove('dragging-file'); dropAt(l.blocks.length, e.dataTransfer); });
+  return z;
+}
 function renderCanvas() {
   const l = course.lessons[cur], c = canvas(); applyTheme(); c.replaceChildren();
   const title = h('input', { type: 'text', class: 'l-title', value: l.title, 'aria-label': 'Lesson title', placeholder: 'Lesson title' });
@@ -1420,8 +1707,9 @@ function renderCanvas() {
   c.append(gap(0));
   l.blocks.forEach((b, i) => { c.append(blockCard(b, i, l), gap(i + 1)); });
   if (!l.blocks.length) c.append(h('div', { class: 'empty-state' }, h('strong', { text: 'This lesson is empty.' }), h('p', { text: 'Drag photos from your computer onto this page, or pick a block below.' })));
-  c.append(h('div', { class: 'add-zone' }, h('h2', { text: 'Add a block' }), tileGrid(id => insertBlock(id, activeIdx >= 0 && activeIdx < l.blocks.length ? activeIdx + 1 : l.blocks.length), true),
-    h('p', { class: 'tipline', text: 'Drag a block tile into the lesson, drag photos in from your computer, or paste an image with Ctrl+V.' })));
+  c.append(h('div', { class: 'add-zone' }, h('h2', { text: 'Add content' }), addDropCard(l),
+    h('p', { class: 'sub', text: 'Or drag a block into the lesson, or click one to add it' }),
+    tileGrid(id => insertBlock(id, activeIdx >= 0 && activeIdx < l.blocks.length ? activeIdx + 1 : l.blocks.length), true)));
 }
 
 /* ---------- drag and drop onto the canvas ---------- */
@@ -1446,7 +1734,7 @@ async function dropAt(idx, dt) {
     const blk = ids.length === 1 ? makeBlock('image', { img: ids[0] }) : makeBlock('gallery', { imgs: ids.map(id => ({ img: id, alt: '', caption: '' })) });
     l.blocks.splice(idx, 0, blk); save(); renderCanvas(); focusBlock(idx);
     toast(ids.length === 1 ? 'Image added. Add alt text below it.' : ids.length + ' images added as a gallery.');
-  }
+  } else if (dt.files && dt.files.length) toast('Only image files can be dropped here (PNG, JPG, GIF, SVG or WebP).');
 }
 (function wireStage() {
   const st = stage();
@@ -1456,7 +1744,7 @@ async function dropAt(idx, dt) {
   let depth = 0;
   window.addEventListener('dragenter', e => { if (hasFiles(e)) { depth++; document.body.classList.add('dragging-file'); } });
   window.addEventListener('dragleave', e => { if (hasFiles(e)) { depth = Math.max(0, depth - 1); if (!depth) document.body.classList.remove('dragging-file'); } });
-  window.addEventListener('drop', e => { depth = 0; document.body.classList.remove('dragging-file'); if (hasFiles(e) && !st.contains(e.target)) e.preventDefault(); });
+  window.addEventListener('drop', e => { depth = 0; document.body.classList.remove('dragging-file'); if (hasFiles(e) && !st.contains(e.target)) e.preventDefault(); }, true);
   window.addEventListener('dragover', e => { if (hasFiles(e) && !st.contains(e.target)) e.preventDefault(); });
   document.addEventListener('paste', async e => {
     const files = imageFiles(e.clipboardData && e.clipboardData.files); if (!files.length) return;
@@ -1568,22 +1856,144 @@ function coursePanel(p) {
 }
 document.querySelectorAll('#tabs .tab').forEach(t => t.addEventListener('click', () => { tab = t.dataset.tab; renderInspector(); }));
 
-function renderAll() { if (cur >= course.lessons.length) cur = 0; $('#course-title').value = course.title; renderOutline(); renderCanvas(); renderInspector(); }
+function renderAll() { if (cur >= course.lessons.length) cur = 0; $('#course-title').value = course.title; $('#acct-slot').replaceChildren(themeBtn(), acctChip()); renderOutline(); renderCanvas(); renderInspector(); }
+
+/* ---------- views: sign in, My projects, editor ---------- */
+const setView = v => { document.body.dataset.view = v; };
+const initials = n => String(n || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase() || '?';
+ICONS.sun = '<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>';
+ICONS.moon = '<path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/>';
+const THEME_KEY = 'studio360.theme';
+const isDark = () => { const d = document.documentElement.dataset.theme; return d ? d === 'dark' : matchMedia('(prefers-color-scheme:dark)').matches; };
+function syncThemeBtns() {
+  const dark = isDark();
+  document.querySelectorAll('.theme-btn').forEach(b => { b.innerHTML = icon(dark ? 'sun' : 'moon', 18); b.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode'); b.title = dark ? 'Light mode' : 'Dark mode'; });
+}
+function toggleTheme() {
+  const next = isDark() ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignore */ }
+  syncThemeBtns();
+}
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change', syncThemeBtns);
+function themeBtn(extra) { const b = h('button', { type: 'button', class: 'theme-btn' + (extra ? ' ' + extra : ''), onclick: toggleTheme }); queueMicrotask(syncThemeBtns); return b; }
+function ago(t) {
+  const s = Math.max(1, Math.round((Date.now() - t) / 1000)); if (s < 60) return 'just now';
+  const m = Math.round(s / 60); if (m < 60) return m + ' min ago';
+  const hr = Math.round(m / 60); if (hr < 24) return hr + (hr === 1 ? ' hour ago' : ' hours ago');
+  const d = Math.round(hr / 24); if (d < 30) return d + (d === 1 ? ' day ago' : ' days ago');
+  return new Date(t).toLocaleDateString();
+}
+const brandEl = () => h('div', { class: 'brand' }, h('i', { class: 'logo' }), 'Learning ', h('span', { text: 'Studio' }));
+document.addEventListener('click', () => document.querySelectorAll('.menu-pop').forEach(m => { m.hidden = true; const b = m.previousElementSibling; if (b) b.setAttribute('aria-expanded', 'false'); }));
+function acctChip() {
+  const u = Auth.user;
+  const btn = h('button', { type: 'button', class: 'avatar-btn', 'aria-haspopup': 'menu', 'aria-expanded': 'false', 'aria-label': 'Account menu for ' + u.name }, h('span', { class: 'avatar', text: initials(u.name) }), h('span', { class: 'avatar-name', text: u.name }));
+  const menu = h('div', { class: 'menu-pop', role: 'menu', hidden: true },
+    h('div', { class: 'mp-id' }, h('b', { text: u.name }), h('span', { text: u.email + ' · Creator' })),
+    h('button', { type: 'button', class: 'mp-item', role: 'menuitem', text: 'My projects', onclick: () => goHome() }),
+    h('button', { type: 'button', class: 'mp-item', role: 'menuitem', text: 'Sign out', onclick: () => signOut() }));
+  btn.addEventListener('click', e => { e.stopPropagation(); const open = menu.hidden; document.querySelectorAll('.menu-pop').forEach(m => { m.hidden = true; }); menu.hidden = !open; btn.setAttribute('aria-expanded', String(open)); });
+  return h('div', { class: 'acct' }, btn, menu);
+}
+async function flush() { clearTimeout(saveT); clearTimeout(histT); if (course && Auth.user && dirty) await persist(); }
+async function goHome() { await flush(); course = null; setView('dash'); renderDash(); }
+async function signOut() { await flush(); course = null; await Auth.signOut(); Projects.index = []; setView('auth'); renderAuth('in'); }
+async function openLoaded(c) {
+  course = c; cur = 0; activeIdx = -1; hist.stack = []; hist.i = -1; dirty = false; pushHist(); setView('edit'); renderAll(); setStatus('Saved to your account');
+}
+async function openProject(id) { try { await flush(); await openLoaded(await Projects.open(id)); } catch (e) { toast(e.message); } }
+async function createProject(kind) { await flush(); const c = newCourse(kind); c.author = Auth.user.name; await Projects.save(c); await openLoaded(c); }
+async function importLegacy() {
+  let s = await Store.get('project'); if (!s) { try { s = localStorage.getItem('studio360.project.v1'); } catch (e) { /* ignore */ } }
+  if (!s) return false;
+  try { const c = normalizeCourse(JSON.parse(s)); await Projects.save(c); return true; } catch (e) { return false; }
+}
+async function enter(firstTime) {
+  await Projects.load();
+  if (firstTime && await importLegacy()) toast('Your earlier project was added to your account.');
+  setView('dash'); renderDash();
+}
+
+function renderAuth(mode) {
+  mode = mode || (Object.keys(Auth.accounts).length ? 'in' : 'up');
+  const v = $('#auth-view'), up = mode === 'up';
+  const err = h('p', { class: 'auth-err', role: 'alert' });
+  const name = h('input', { type: 'text', id: 'au-name', autocomplete: 'name', placeholder: 'Your name' });
+  const email = h('input', { type: 'email', id: 'au-email', autocomplete: 'email', placeholder: 'you@example.com' });
+  const pw = h('input', { type: 'password', id: 'au-pw', autocomplete: up ? 'new-password' : 'current-password', placeholder: up ? 'At least 8 characters' : 'Your password' });
+  const show = h('input', { type: 'checkbox' }); show.addEventListener('change', () => { pw.type = show.checked ? 'text' : 'password'; });
+  const go = h('button', { type: 'submit', class: 'btn primary big', text: up ? 'Create creator account' : 'Sign in' });
+  const field = (id, label, input) => h('div', { class: 'au-f' }, h('label', { for: id, text: label }), input);
+  const form = h('form', { class: 'auth-card', novalidate: true, 'aria-labelledby': 'au-h' },
+    h('h1', { id: 'au-h', text: up ? 'Create your creator account' : 'Welcome back' }),
+    h('p', { class: 'au-sub', text: up ? 'Your courses are saved to your account, so you can come back to them any time.' : 'Sign in to open your projects.' }),
+    up && field('au-name', 'Name', name), field('au-email', 'Email', email), field('au-pw', 'Password', pw),
+    h('label', { class: 'au-show' }, show, 'Show password'), err, go,
+    h('p', { class: 'au-switch' }, up ? 'Already have an account? ' : 'New here? ', h('button', { type: 'button', class: 'linkbtn', text: up ? 'Sign in' : 'Create an account', onclick: () => renderAuth(up ? 'in' : 'up') })),
+    h('p', { class: 'au-note', text: 'Accounts and projects are stored in this browser on this device. Use Export, then Project file, to back up or move your work.' }));
+  form.addEventListener('submit', async e => {
+    e.preventDefault(); err.textContent = ''; go.disabled = true;
+    try { if (up) await Auth.signUp(name.value, email.value, pw.value); else await Auth.signIn(email.value, pw.value); await enter(Auth.isNew); }
+    catch (ex) { err.textContent = ex.message; go.disabled = false; }
+  });
+  const hero = h('div', { class: 'auth-hero' }, brandEl(), h('h2', { text: 'Build interactive courses, then publish anywhere.' }),
+    h('ul', null, ['Drag-and-drop lesson blocks', 'Flip cards, quizzes and scenarios', 'One-click SCORM 1.2 and 2004 export'].map(t => h('li', { text: t }))));
+  v.replaceChildren(hero, h('div', { class: 'auth-side' }, themeBtn('auth-theme'), form));
+  (up ? name : email).focus();
+}
+
+function projThumb(pal) {
+  const c = k => (isHex(pal && pal[k]) ? pal[k] : '#888888');
+  return h('div', { class: 'proj-thumb', 'aria-hidden': 'true', style: '--b:' + c('bg') + ';--a:' + c('accent') + ';--t:' + c('text') + ';--p:' + c('panel') },
+    h('i', { class: 'pt-h' }), h('i', { class: 'pt-l' }), h('i', { class: 'pt-l s' }), h('i', { class: 'pt-c' }));
+}
+function renderDash() {
+  const v = $('#dash-view'), u = Auth.user;
+  const q = h('input', { type: 'search', class: 'dash-search', placeholder: 'Search projects', 'aria-label': 'Search projects' });
+  const top = h('header', { class: 'dash-top' }, brandEl(), q,
+    h('button', { type: 'button', class: 'btn', text: 'Import', title: 'Import a project file (.json)', onclick: () => $('#file-open').click() }),
+    h('button', { type: 'button', class: 'btn primary', text: '+ New project', onclick: () => $('#new-dlg').showModal() }), themeBtn(), acctChip());
+  const body = h('div', { class: 'dash-body' });
+  const draw = () => {
+    const term = q.value.trim().toLowerCase(), list = Projects.index.filter(p => !term || p.title.toLowerCase().includes(term)).sort((a, b) => b.updated - a.updated);
+    body.replaceChildren(h('h1', { text: 'My projects' }), h('p', { text: 'Signed in as ' + u.name + '. Everything you build is saved to your account automatically.' }));
+    if (!Projects.index.length) {
+      body.append(h('div', { class: 'dash-empty' }, h('h2', { text: 'Create your first course' }), h('p', { text: 'Pick a starting point. You can change everything later.' }),
+        h('div', { class: 'tpls' }, TEMPLATES.map(t => h('button', { type: 'button', class: 'tpl', onclick: () => createProject(t.id) }, h('b', { text: t.name }), h('span', { text: t.desc }))))));
+      return;
+    }
+    const grid = h('div', { class: 'proj-grid' });
+    grid.append(h('button', { type: 'button', class: 'proj new', onclick: () => $('#new-dlg').showModal() }, h('span', null, h('big', { text: '+' }), 'New project')));
+    list.forEach(p => grid.append(h('article', { class: 'proj' },
+      h('button', { type: 'button', class: 'proj-open', 'aria-label': 'Open ' + p.title, onclick: () => openProject(p.id) }, projThumb(p.pal),
+        h('div', { class: 'proj-meta' }, h('b', { text: p.title }), h('span', { text: p.lessons + (p.lessons === 1 ? ' lesson' : ' lessons') + ' · edited ' + ago(p.updated) }))),
+      h('div', { class: 'proj-actions' },
+        tbtn('Duplicate', async () => { try { const c = await Projects.open(p.id); c.id = uid() + uid(); c.title += ' (copy)'; await Projects.save(c); draw(); toast('Project duplicated.'); } catch (e) { toast(e.message); } }),
+        tbtn('Delete', async () => { if (!confirm('Delete "' + p.title + '" from your account? This cannot be undone. Export a project file first if you might need it.')) return; await Projects.remove(p.id); draw(); toast('Project deleted.'); }, { cls: 'del' })))));
+    body.append(grid);
+    if (!list.length) body.append(h('p', { class: 'hint', text: 'No projects match "' + q.value + '".' }));
+  };
+  q.addEventListener('input', draw);
+  v.replaceChildren(top, body); draw();
+}
 
 /* ---------- header actions ---------- */
 $('#course-title').addEventListener('input', e => { course.title = e.target.value; save(); });
 $('#btn-add-lesson').addEventListener('click', () => { course.lessons.push(newLesson('Lesson ' + (course.lessons.length + 1), [makeBlock('heading')])); cur = course.lessons.length - 1; activeIdx = -1; save(); renderAll(); });
 document.querySelectorAll('dialog [data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
 
-$('#tpl-list').append(...TEMPLATES.map(t => h('button', { type: 'button', class: 'tpl', onclick: () => {
-  if (!confirm('Replace the current course with "' + t.name + '"? Press Undo afterwards to bring the old one back.')) return;
-  const media = course.media; course = newCourse(t.id); course.media = media; cur = 0; activeIdx = -1; $('#new-dlg').close(); pushHist(); save(); renderAll(); } }, h('b', { text: t.name }), h('span', { text: t.desc }))));
+$('#tpl-list').append(...TEMPLATES.map(t => h('button', { type: 'button', class: 'tpl', onclick: () => { $('#new-dlg').close(); createProject(t.id); } }, h('b', { text: t.name }), h('span', { text: t.desc }))));
 $('#btn-new').addEventListener('click', () => $('#new-dlg').showModal());
 $('#btn-open').addEventListener('click', () => $('#file-open').click());
+$('#btn-home').addEventListener('click', goHome);
 $('#file-open').addEventListener('change', async e => {
-  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
-  try { const c = normalizeCourse(JSON.parse(await f.text())); if (!confirm('Open "' + c.title + '"? This replaces the current course.')) return; course = c; cur = 0; hist.stack = []; hist.i = -1; pushHist(); save(); renderAll(); }
-  catch (err) { alert('Could not open that file. ' + err.message); }
+  const f = e.target.files[0]; e.target.value = ''; if (!f || !Auth.user) return;
+  try {
+    const c = normalizeCourse(JSON.parse(await f.text()));
+    await flush(); if (Projects.index.some(x => x.id === c.id)) c.id = uid() + uid();
+    await Projects.save(c); await openLoaded(c); toast('Imported "' + c.title + '" into your projects.');
+  } catch (err) { alert('Could not open that file. ' + err.message); }
 });
 
 /* ---------- export ---------- */
@@ -1634,13 +2044,10 @@ $('#pv-reset').addEventListener('click', () => { lms.store = {}; try { localStor
 $('#preview-dlg').addEventListener('close', () => { $('#pv-frame').srcdoc = ''; });
 
 /* ---------- start ---------- */
-window.addEventListener('beforeunload', () => { if (course) persist(); });
+window.addEventListener('beforeunload', () => { if (course && Auth.user && dirty) persist(); });
 (async function init() {
-  await Store.open();
-  let s = await Store.get('project');
-  if (!s) { try { s = localStorage.getItem('studio360.project.v1'); } catch (e) {} }
-  try { course = s ? normalizeCourse(JSON.parse(s)) : newCourse('visual'); } catch (e) { course = newCourse('visual'); }
-  pushHist(); renderAll(); setStatus(s ? 'Project restored' : 'Ready');
+  await Store.open(); await Auth.load();
+  if (await Auth.resume()) await enter(false); else { setView('auth'); renderAuth(); }
 })();
 </script>
 </body>
